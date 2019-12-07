@@ -98,7 +98,11 @@ void FeliCa() {
 			//uint16 service = f2->service_code[j];
 			//for (k = 0; k < 255; k++) {
 				uint8 data[16];
+<<<<<<< HEAD
 			/*	if (felica_read_without_encryption02(f2, service, 0, (uint8)k, data)) {
+=======
+				if (felica_read_without_encryption02(f2, service, 0, (uint8)k, data)) {
+>>>>>>> f252629ae3cf3f32d5dbdc1ba8eda59738d6d283
 					//break;
 					Touch_Flag = 0;
 				}
@@ -124,6 +128,10 @@ void Out_File() {
 	int Com_Flag = 0;
 	int hour, min;
 	char str[16];
+<<<<<<< HEAD
+=======
+	localtime(&t);
+>>>>>>> f252629ae3cf3f32d5dbdc1ba8eda59738d6d283
 	fp = fopen(fname, "a");
 	
 		while(i < id){
