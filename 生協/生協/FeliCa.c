@@ -46,10 +46,10 @@
 #include "All.h"
 
 #define ID_Data 20683
-#define File_Name "Sample.csv"
-void Out_File(char* Identity);
+void Out_File();
+void Scan_File(char *Identity)
 
-
+int i = 0;
 
 void FeliCa_INIT() {
 	/*FeliCa*/
@@ -67,24 +67,21 @@ void FeliCa_INIT() {
 	if (!f) {
 		//fprintf(stderr, "Polling card failed.\n");
 		//exit(1);
-		Touch_Flag = 0;
 	}
 
-	Touch_Flag = 1;
+	//Touch_Flag = 1;
 
 	f = felica_enum_systemcode(p);
 	if (!f) {
 		exit(1);
 	}
+
+
 }
-
-
 struct  Member {
 	char ID[256];
 	int Att_Time; //出勤時間
 	int Work_Time; //退勤時間
-	int Att2_Time; //出勤時間2
-	int Work2_Time; //退勤時間2
 };
 
 struct Member Member[256];
@@ -98,67 +95,42 @@ void FeliCa() {
 		}
 
 		for (j = 0; j < f2->num_service_code; j++) {
-			uint16 service = f2->service_code[j];
-			for (k = 0; k < 255; k++) {
+			//uint16 service = f2->service_code[j];
+			//for (k = 0; k < 255; k++) {
 				uint8 data[16];
-				if (felica_read_without_encryption02(f2, service, 0, (uint8)k, data)) {
-					break;
+			/*	if (felica_read_without_encryption02(f2, service, 0, (uint8)k, data)) {
+					//break;
 					Touch_Flag = 0;
 				}
-				if (service == ID_Data && k == 0) {
+			*/
+				if ((f2->service_code[j]) == ID_Data && k == 0) {
 					snprintf(Member[id].ID, sizeof(Member[id].ID), "%x%x%02x%02x%02x%02x", data[0], data[1], data[2], data[3], data[4], data[5]);
 					printf("%s\n", Member[id].ID);
-					Out_File(Member[id].ID);
+					printf("i:%d\n", i);
+					printf("j:%d\n", j);
+					Member[id].Att_Time = ((int)t / 3600 + 9) % 24;
+					Member[id].Work_Time = t / 60 % 60;
 					id++;
 					break;
 				}
-			}
+			//}
 		}
 		printf("\n");
 		felica_free(f2);
 	}
 }
 
-
-
-void Out_File(char* Identity) {
+void Out_File() {
 	int Com_Flag = 0;
-	time_t t = time(NULL);
 	int hour, min;
 	char str[16];
-	char* s1 = "ID";
-	char* s2 = "出勤時間";
-	localtime(&t);
-
-
-	FILE* fp;
-	char* fname = File_Name;
-
-
-	fp = fopen(fname, "w+");
-	if (!fp) {
-		fprintf(stderr, "Can't Open File.\n");
-	}
-
-	if (fscanf(fp, "%s, %02d:%02d", str, &hour, &min) == EOF) {
-		fprintf(fp, "%s, %s\n", s1, s2);
-		fprintf(fp, "%s, %02d:%02d\n", Identity, ((int)t / 3600 + 9) % 24, (int)t / 60 % 60);
-		Member[id].Att_Time = ((int)t / 3600 + 9) % 24;
-		Member[id].Work_Time = t / 60 % 60;
-	}
-
-	else{
-		while (fscanf(fp, "%s, %02d:%02d", str, &hour, &min) != EOF) {
-			if (strcmp(str, Identity) == 0) {
-				puts("OK");
-				fprintf(fp, "%s, %02d:%02d, %02d:%02d", str, hour, min, ((int)t / 3600 + 9) % 24, (int)t / 60 % 60);
-				Com_Flag = 1;
-			}
+	fp = fopen(fname, "a");
+	
+		while(i < id){
+			fprintf(fp, "%s, %02d:%02d\n", Member[i].Att_Time, Member[i].Att_Time, Member[i].Work_Time);
+			i++;
 		}
-		if (!Com_Flag) {
-			fprintf(fp, "%s, %02d:%02d\n", Identity, ((int)t / 3600 + 9) % 24, (int)t / 60 % 60);
-			fclose(fp);
-		}
-	}
+
+	fclose(fp);
+
 }
-
