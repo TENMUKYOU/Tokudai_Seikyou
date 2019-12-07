@@ -106,6 +106,8 @@ void FeliCa() {
 				if (service == ID_Data && k == 0) {
 					snprintf(Member[id].ID, sizeof(Member[id].ID), "%x%x%02x%02x%02x%02x", data[0], data[1], data[2], data[3], data[4], data[5]);
 					printf("%s\n", Member[id].ID);
+					printf("i:%d\n", i);
+					printf("j:%d\n", j);
 					Member[id].Att_Time = ((int)t / 3600 + 9) % 24;
 					Member[id].Work_Time = t / 60 % 60;
 					id++;
