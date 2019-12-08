@@ -27,16 +27,10 @@ int main(int argc, char* argv[]) {
 
 void Event() {
 	unsigned long set_t = t;
-<<<<<<< HEAD
 	FeliCa();
-=======
->>>>>>> f252629ae3cf3f32d5dbdc1ba8eda59738d6d283
 	SDL_Event e;
 	while(1) {
 		FeliCa_INIT();
-		if((t - set_t)<=300){
-			Out_File();	
-		}
 		if((t - set_t)<=300){
 			Out_File();	
 		}

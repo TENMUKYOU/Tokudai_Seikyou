@@ -66,7 +66,6 @@ void FeliCa_INIT() {
 	
 	if (!f) {
 		//fprintf(stderr, "Polling card failed.\n");
-		//exit(1);
 	}
 
 	//Touch_Flag = 1;
@@ -87,51 +86,34 @@ struct  Member {
 struct Member Member[256];
 int id = 0;
 void FeliCa() {
-	for (i = 0; i < f->num_system_code; i++) {
 		f2 = felica_enum_service(p, N2HS(f->system_code[i]));
-		if (!f2) {
-			fprintf(stderr, "Enum service failed.\n");
-			exit(1);
-		}
+			if (!f2) {
+				fprintf(stderr, "Enum service failed.\n");
+				exit(1);
+			}
 
-		for (j = 0; j < f2->num_service_code; j++) {
-			//uint16 service = f2->service_code[j];
-			//for (k = 0; k < 255; k++) {
-				uint8 data[16];
-<<<<<<< HEAD
-			/*	if (felica_read_without_encryption02(f2, service, 0, (uint8)k, data)) {
-=======
+		uint16 service = f2->service_code[j];
+		uint8 data[16];
 				if (felica_read_without_encryption02(f2, service, 0, (uint8)k, data)) {
->>>>>>> f252629ae3cf3f32d5dbdc1ba8eda59738d6d283
-					//break;
-					Touch_Flag = 0;
-				}
-			*/
-				if ((f2->service_code[j]) == ID_Data && k == 0) {
-					snprintf(Member[id].ID, sizeof(Member[id].ID), "%x%x%02x%02x%02x%02x", data[0], data[1], data[2], data[3], data[4], data[5]);
-					printf("%s\n", Member[id].ID);
-					printf("i:%d\n", i);
-					printf("j:%d\n", j);
-					Member[id].Att_Time = ((int)t / 3600 + 9) % 24;
-					Member[id].Work_Time = t / 60 % 60;
-					id++;
 					break;
 				}
-			//}
-		}
+				snprintf(Member[id].ID, sizeof(Member[id].ID), "%x%x%02x%02x%02x%02x", data[0], data[1], data[2], data[3], data[4], data[5]);
+				printf("%s\n", Member[id].ID);
+				printf("i:%d\n", i);
+				printf("j:%d\n", j);
+				Member[id].Att_Time = ((int)t / 3600 + 9) % 24;
+				Member[id].Work_Time = t / 60 % 60;
+				id++;
+				break;
+				
 		printf("\n");
 		felica_free(f2);
-	}
 }
 
 void Out_File() {
 	int Com_Flag = 0;
 	int hour, min;
 	char str[16];
-<<<<<<< HEAD
-=======
-	localtime(&t);
->>>>>>> f252629ae3cf3f32d5dbdc1ba8eda59738d6d283
 	fp = fopen(fname, "a");
 	
 		while(i < id){
