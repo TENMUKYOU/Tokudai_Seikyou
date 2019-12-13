@@ -40,21 +40,25 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
-
-
 #include "felicalib.h"
 #include "All.h"
 
 #define ID_Data 20683
-void Out_File();
-void Scan_File(char *Identity)
+#define File_Name "Sample.csv"
 
+void Out_File();
+
+int id = 0;
 int i = 0;
+char* s1 = "ID";
+char* s2 = "ATT_TIME";
+char* fname = File_Name;
+
 
 void FeliCa_INIT() {
 	/*FeliCa*/
 	p = pasori_open(NULL);
-	
+
 	if (!p) {
 		fprintf(stderr, "PaSoRi open failed.\n");
 		exit(1);
@@ -63,7 +67,7 @@ void FeliCa_INIT() {
 	pasori_init(p);
 
 	f = felica_polling(p, POLLING_ANY, 0, 0);
-	
+
 	if (!f) {
 		//fprintf(stderr, "Polling card failed.\n");
 	}
@@ -84,43 +88,44 @@ struct  Member {
 };
 
 struct Member Member[256];
-int id = 0;
 void FeliCa() {
-		f2 = felica_enum_service(p, N2HS(f->system_code[i]));
-			if (!f2) {
-				fprintf(stderr, "Enum service failed.\n");
-				exit(1);
-			}
+	f2 = felica_enum_service(p, N2HS(f->system_code[1]));
+	if (!f2) {
+		fprintf(stderr, "Enum service failed.\n");
+		exit(1);
+	}
 
-		uint16 service = f2->service_code[j];
-		uint8 data[16];
-				if (felica_read_without_encryption02(f2, service, 0, (uint8)k, data)) {
-					break;
-				}
-				snprintf(Member[id].ID, sizeof(Member[id].ID), "%x%x%02x%02x%02x%02x", data[0], data[1], data[2], data[3], data[4], data[5]);
-				printf("%s\n", Member[id].ID);
-				printf("i:%d\n", i);
-				printf("j:%d\n", j);
-				Member[id].Att_Time = ((int)t / 3600 + 9) % 24;
-				Member[id].Work_Time = t / 60 % 60;
-				id++;
-				break;
-				
-		printf("\n");
-		felica_free(f2);
+	uint16 service = f2->service_code[13];
+	uint8 data[16];
+	int k = 0;
+	if (felica_read_without_encryption02(f2, service, 0, (uint8)k, data)) {
+		printf("Error");
+	}
+	snprintf(Member[id].ID, sizeof(Member[id].ID), "%x%x%02x%02x%02x%02x", data[0], data[1], data[2], data[3], data[4], data[5]);
+	Member[id].Att_Time = ((int)t / 3600 + 9) % 24;
+	Member[id].Work_Time = t / 60 % 60;
+	printf("%s %02d:%02d\n", Member[id].ID, Member[id].Att_Time, Member[id].Work_Time);
+	id++;
+	printf("\n");
+	felica_free(f2);
 }
 
 void Out_File() {
 	int Com_Flag = 0;
-	int hour, min;
-	char str[16];
 	fp = fopen(fname, "a");
-	
-		while(i < id){
-			fprintf(fp, "%s, %02d:%02d\n", Member[i].Att_Time, Member[i].Att_Time, Member[i].Work_Time);
-			i++;
-		}
-
+	while (i <= id) {
+		fprintf(fp, "%s, %02d:%02d\n", Member[i].ID, Member[i].Att_Time, Member[i].Work_Time);
+		i++;
+	}
 	fclose(fp);
 
+}
+
+void File_INIT() {
+	fp = fopen(fname, "w");
+	if (!fp) {
+		fprintf(stderr, "Can't Open File.\n");
+	}
+	fprintf(fp, "%s, %s\n", s1, s2);
+	fclose(fp);
 }

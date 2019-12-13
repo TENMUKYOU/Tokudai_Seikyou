@@ -1,6 +1,16 @@
 #include <SDL.h>
 #include "All.h"
 
+
+typedef struct//フレームレート用の変数
+{
+	Uint32 now,//現在時間
+		wit,//待ち時間
+		lev;//経過時間
+}timers;
+
+extern timers timer;
+
 void SDL_INIT() {
 	/*SDL*/
 	SDL_Init(SDL_INIT_EVERYTHING);

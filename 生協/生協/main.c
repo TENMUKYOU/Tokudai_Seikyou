@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <SDL.h>
 #include "felicalib.h"
-
+#include <time.h>
 #include "All.h"
 
 
@@ -12,28 +12,20 @@
 void Event();
 
 int main(int argc, char* argv[]) {
+	t = time(NULL);
+	localtime(&t);
 	SDL_INIT();
 	FeliCa_INIT();
-		fp = fopen(fname, "w");
-		if (!fp) {
-			fprintf(stderr, "Can't Open File.\n");
-		}
-		fprintf(fp, "%s, %s\n", s1, s2);
-		fclose(fp);	
 	Event();
 	return 0;
 }
 
 
 void Event() {
-	unsigned long set_t = t;
+	File_INIT();
 	FeliCa();
 	SDL_Event e;
-	while(1) {
-		FeliCa_INIT();
-		if((t - set_t)<=300){
-			Out_File();	
-		}
+	while (1) {
 		if (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT) {
 				felica_free(f);
@@ -45,6 +37,12 @@ void Event() {
 				pasori_close(p);
 				break;
 			}
+			else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_s) {
+				Out_File();
+				puts("Out Put Data");
+			}
 		}
+		SDL_Delay(16);
 	}
 }
+

@@ -1,9 +1,4 @@
 ﻿  FeliCa.c
 C:\Users\c6116\Source\Repos\生協\生協\FeliCa.c(1,1): warning C4819:  ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
-  SDL.c
-C:\Users\c6116\Source\Repos\生協\生協\felicalib.h(1,1): warning C4819:  ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
-  main.c
-C:\Users\c6116\Source\Repos\生協\生協\felicalib.h(1,1): warning C4819:  ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
-  コードを生成中...
 C:\Users\c6116\Source\Repos\生協\生協\felicalib.h(1,1): warning C4819:  ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
   生協.vcxproj -> C:\Users\c6116\Source\Repos\生協\Debug\生協.exe
