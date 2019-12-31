@@ -28,7 +28,7 @@ $(ObjRoot)/%.$(OBJ_EXTENSION): ./%.$(SRC_EXTENSION)
 $(PRODUCTS)/$(PROJECTNAME): $(Objects)
 	@echo Uniting...
 	@$(COMPILER) $^ $(headerPath) $(INCLUDE_PATH) $(DLL) -o $@
-	@echo Execute : ./$@.exe
+	@echo Execute : .\$@.exe
 	@echo (keep this current directory)
 	@echo Done!
 
