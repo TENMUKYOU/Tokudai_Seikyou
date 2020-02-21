@@ -1,19 +1,22 @@
 PROJECTNAME   = AttendanceManagement
-COMPILER      = gcc
-SRC_EXTENSION = c
+COMPILER      = g++
+SRC_EXTENSION = cpp
 OBJ_EXTENSION = o
+FLAGS         =
 
 DLL = \
+	SDL2.dll\
 	felicalib.dll\
-	SDL2.dll
+	SDL2_ttf.dll\
+	C:\MinGW\bin\SDL2_image.dll
 
 INCLUDE_PATH = \
-	-IC:/include
+	-IC:/include\
 
 PRODUCTS = .
 
-ObjRoot=.\_obj
-rDir=$(shell dir /a:d)
+ObjRoot=.\\_obj
+rDir=$(shell dir -ad)
 Sources=$(foreach var,$(rDir),$(wildcard $(var)/*.$(SRC_EXTENSION)))
 h=$(foreach var,$(rDir),$(wildcard $(var)/*.h))
 header=$(h) $(hpp)
@@ -23,15 +26,15 @@ Objects=$(addprefix $(ObjRoot)/,$(Sources:.$(SRC_EXTENSION)=.o))
 
 $(ObjRoot)/%.$(OBJ_EXTENSION): ./%.$(SRC_EXTENSION)
 	@echo Updated : $<
-	@$(COMPILER) -c $< $(headerPath) $(INCLUDE_PATH) -o $@
+	@$(COMPILER) -c $< $(FLAGS) $(headerPath) $(INCLUDE_PATH) -o $@ -g
 
 $(PRODUCTS)/$(PROJECTNAME): $(Objects)
 	@echo Uniting...
-	@$(COMPILER) $^ $(headerPath) $(INCLUDE_PATH) $(DLL) -o $@
+	@$(COMPILER) $^ $(FLAGS) $(headerPath) $(INCLUDE_PATH) $(DLL) -o $@ -g
 	@echo Execute : .\$@.exe
 	@echo (keep this current directory)
 	@echo Done!
 
 .PHONY: clean
 clean:
-	@del /q $(PRODUCTS)\$(PROJECTNAME).exe $(ObjRoot)\
+	@del -q $(PRODUCTS)\$(PROJECTNAME).exe $(ObjRoot)\
